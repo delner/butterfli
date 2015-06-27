@@ -7,8 +7,8 @@ Gem::Specification.new do |s|
   s.version       = Butterfli::VERSION
   s.authors       = ["David Elner"]
   s.email         = ["david@davidelner.com"]
-  s.summary       = %q{Processes data from external APIs into common container.}
-  s.description   = %q{Processes data from external APIs into common container, typically from social media.}
+  s.summary       = %q{Processes data from the web into a common container.}
+  s.description   = %q{Processes data from the web into a common container, typically from social media.}
   s.homepage      = "http://github.com/delner/butterfli"
   s.license       = "MIT"
 
