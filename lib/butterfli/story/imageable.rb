@@ -6,7 +6,9 @@ module Butterfli::Imageable
   class Images < Hash
     include Butterfli::Schemable
 
-    array :thumbnails # A URI to the original story
+    field :thumbnail # A URI to a thumbnail for the story
+    field :small # A URI to a small image for the story
+    field :full # A URI to the full image for the story
   end
 
   class Image < Hash
