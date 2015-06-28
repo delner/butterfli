@@ -12,5 +12,5 @@ class Butterfli::Story < Hash
 
   field :type # The kind of story (e.g. 'tweet', 'post', 'photo', 'video')
   field :source # Name of the source it came from ('twitter', 'facebook')
-  field :date # Time the story occurred
+  field :created_date # Time the story occurred
 end

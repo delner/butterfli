@@ -15,5 +15,9 @@ describe Butterfli::Story do
     it_behaves_like "mappable"
     it_behaves_like "shareable"
     it_behaves_like "taggable"
+
+    it_behaves_like "it has a field", "source"
+    it_behaves_like "it has a field", "type"
+    it_behaves_like "it has a field", "created_date"
   end
 end
