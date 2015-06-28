@@ -12,3 +12,7 @@ require 'butterfli/story/imageable'
 require 'butterfli/story/mappable'
 require 'butterfli/story'
 
+require 'butterfli/data'
+require 'butterfli/data/instagram'
+require 'butterfli/data/instagram/media_object'
+require 'butterfli/data/instagram/realtime'
