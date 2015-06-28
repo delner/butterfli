@@ -14,5 +14,6 @@ module Butterfli::Commentable
     include Butterfli::Likeable
 
     field :body
+    field :created_date
   end
 end
