@@ -1,4 +1,5 @@
 require "butterfli/version"
+require "butterfli/configuration"
 
 require 'butterfli/story/schemable'
 require 'butterfli/story/authorable'
