@@ -1,4 +1,4 @@
-Olfactory
+Butterfli
 ==========
 
 [![Build Status](https://travis-ci.org/delner/butterfli.svg?branch=master)](https://travis-ci.org/delner/butterfli) ![Gem Version](https://badge.fury.io/rb/butterfli.svg)
