@@ -8,7 +8,7 @@ Butterfli
 
 `butterfli` is a gem that provides a common container for social media objects and other "stories" from around the web. It takes data (typically retrieved via API) and converts them into a Story object. 
 
-It is the base for its sister gem, `butterfli-rails` which adds API enpoints for public APIs via Rails engines.
+It is the base for its sister gem, [`butterfli-rails`](https://github.com/delner/butterfli-rails) which adds API enpoints for public APIs via Rails engines.
 
 ### Installation
 
