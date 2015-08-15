@@ -19,13 +19,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
 
-  # Future dependencies:
-  # s.add_dependency "instagram"
-  # s.add_dependency "httparty"
-
   s.add_development_dependency "rake", "~> 10.0"
   s.add_development_dependency "rspec", "~> 3.3"
-  s.add_development_dependency "pry"
+  s.add_development_dependency "pry", "~> 0.10.1"
   s.add_development_dependency "pry-stack_explorer", "~> 0.4.9"
   s.add_development_dependency "yard", "~> 0.8.7.6"
 end
