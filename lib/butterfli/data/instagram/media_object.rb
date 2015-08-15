@@ -4,6 +4,9 @@ class Butterfli::Data::Instagram::MediaObject < Hash
   end
 
   def transform
+    # NOTE: We currently don't support non-image media
+    return nil if self['type'] != 'image'
+
     story = Butterfli::Story.new
 
     # Basic attributes
