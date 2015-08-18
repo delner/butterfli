@@ -1,6 +1,8 @@
 require "butterfli/version"
 require "butterfli/configuration"
 
+require 'butterfli/observable'
+
 require 'butterfli/story/schemable'
 require 'butterfli/story/authorable'
 require 'butterfli/story/taggable'
