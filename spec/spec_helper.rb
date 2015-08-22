@@ -4,6 +4,7 @@ $LOAD_PATH << File.join(File.dirname(__FILE__))
 
 require 'rubygems'
 require 'pry'
+require 'rspec/collection_matchers'
 
 require 'butterfli'
 
