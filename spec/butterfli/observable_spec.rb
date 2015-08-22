@@ -201,4 +201,42 @@ describe Butterfli::Observable do
       end
     end
   end
+
+  context "when two classes are observable" do
+    let(:observable_class_two) do
+      stub_const 'Facegram', Module.new
+      Facegram.class_eval { include Butterfli::Observable }
+      Facegram
+    end
+    context "and subscriptions are setup on each" do
+      let(:target_one) { double("target_one") }
+      let(:subscription_one) { Proc.new { |stories| target_one.share(stories) } }
+
+      let(:target_two) { double("target_two") }
+      let(:subscription_two) { Proc.new { |stories| target_two.share(stories) } }
+
+      before(:each) do
+        observable_class.subscribe &subscription_one
+        observable_class_two.subscribe &subscription_two
+      end
+
+      context "and a story is syndicated" do
+        let(:story) { Butterfli::Story.new.merge!(type: :image) }
+        context "to the first" do
+          it do
+            expect(target_one).to receive(:share).with([story])
+            expect(target_two).to_not receive(:share)
+            observable_class.syndicate(story)
+          end
+        end
+        context "to the second" do
+          it do
+            expect(target_one).to_not receive(:share)
+            expect(target_two).to receive(:share).with([story])
+            observable_class_two.syndicate(story)
+          end
+        end
+      end
+    end
+  end
 end
