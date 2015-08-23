@@ -6,17 +6,35 @@
 
 ### Introduction
 
-`butterfli` is a gem that provides a common container for social media objects and other "stories" from around the web. It takes data (typically retrieved via API) and converts them into a Story object. 
+`butterfli` is a gem for developers who want quick-access to data from popular APIs. It takes data from well-known endpoints (e.g. Instagram, Twitter, etc.) and converts them into a common container, known as a `Story`.
 
-It is the base for its sister gem, [`butterfli-rails`](https://github.com/delner/butterfli-rails) which adds API enpoints for public APIs via Rails engines.
+Currently supported providers include:
+ - [Instagram](https://github.com/delner/butterfli-instagram)
+
+Future support for providers include:
+ - Facebook
+ - Twitter
+ - Google+
+ - Vine
+ - Foursquare
+
+It is the base gem for the full *Butterfli* suite:
+
+**Core gems**:
+ - [`butterfli`](https://github.com/delner/butterfli): Core gem for Butterfli suite.
+ - [`butterfli-rails`](https://github.com/delner/butterfli-rails): Core gem for Rails-engine based API interactions.
+
+**Extension gems**:
+ - [`butterfli-instagram`](https://github.com/delner/butterfli-instagram): Adds Instagram data to the Butterfli suite.
+ - [`butterfli-instagram-rails`](https://github.com/delner/butterfli-instagram-rails): Adds Rails API endpoints for realtime-subscriptions.
 
 ### Installation
 
-(To be written.)
+Install the gem via `gem install butterfli`
 
 ### Usage
 
-(To be written.)
+The base Butterfli gem is for developers who want to extend the Butterfli suite. To use the gem to access some popular APIs, check out the *Extension gems* list above.
 
 ### Changelog
 
