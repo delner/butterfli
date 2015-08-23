@@ -1,3 +1,4 @@
 1. Make Butterfli module Observable
   - Change 'to:' argument for providers
   - Add 'for:' argument for story type
+2. Change to 'core' gem scheme? (Like RSpec?)
