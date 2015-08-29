@@ -73,24 +73,24 @@ describe Butterfli::Observable do
         let(:subscription_type) { :image }
         let(:other_subscription_type) { :video }
         subject do
-          super().subscribe to: subscription_type, &subscription
+          super().subscribe type: subscription_type, &subscription
         end
 
         it_behaves_like "an observable #subscribe call"
 
         context "and a single story" do
           context "of matching type is syndicated" do
-            let(:story) { Butterfli::Story.new.merge!(type: subscription_type) }
+            let(:matching_story) { Butterfli::Story.new.merge!(type: subscription_type) }
             it do
-              expect(target).to receive(:share).with([story])
-              observable_class.syndicate(story)
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(matching_story)
             end
           end
           context "of non-matching type is syndicated" do
-            let(:story) { Butterfli::Story.new.merge!(type: other_subscription_type) }
+            let(:non_matching_story) { Butterfli::Story.new.merge!(type: other_subscription_type) }
             it do
               expect(target).to_not receive(:share)
-              observable_class.syndicate(story)
+              observable_class.syndicate(non_matching_story)
             end
           end
         end
@@ -128,24 +128,24 @@ describe Butterfli::Observable do
         let(:subscription_types) { [:image, :video] }
         let(:other_subscription_type) { :audio }
         subject do
-          super().subscribe to: subscription_types, &subscription
+          super().subscribe type: subscription_types, &subscription
         end
 
         it_behaves_like "an observable #subscribe call"
 
         context "and a single story" do
           context "of matching type is syndicated" do
-            let(:story) { Butterfli::Story.new.merge!(type: subscription_types.first) }
+            let(:matching_story) { Butterfli::Story.new.merge!(type: subscription_types.first) }
             it do
-              expect(target).to receive(:share).with([story])
-              observable_class.syndicate(story)
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(matching_story)
             end
           end
           context "of non-matching type is syndicated" do
-            let(:story) { Butterfli::Story.new.merge!(type: other_subscription_type) }
+            let(:non_matching_story) { Butterfli::Story.new.merge!(type: other_subscription_type) }
             it do
               expect(target).to_not receive(:share)
-              observable_class.syndicate(story)
+              observable_class.syndicate(non_matching_story)
             end
           end
         end
@@ -175,6 +175,160 @@ describe Butterfli::Observable do
             it do
               expect(target).to_not receive(:share)
               observable_class.syndicate(stories)
+            end
+          end
+        end
+      end
+      context "a provider to listen to" do
+        let(:provider_name) { :good_provider }
+        let(:non_matching_provider_name) { :bad_provider }
+
+        subject do
+          super().subscribe to: provider_name, &subscription
+        end
+
+        it_behaves_like "an observable #subscribe call"
+
+        context "and a single story is syndicated" do
+          context "from the matching provider" do
+            let(:matching_story) { Butterfli::Story.new.merge!(source: provider_name) }
+            it do
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(matching_story)
+            end
+          end
+          context "from a non-matching provider" do
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(non_matching_story)
+            end
+          end
+        end
+        context "and multiple stories" do
+          let(:stories) { [story_one, story_two] }
+          context "all from matching provider are syndicated" do
+            let(:matching_story_one) { Butterfli::Story.new.merge!(source: provider_name) }
+            let(:matching_story_two) { Butterfli::Story.new.merge!(source: provider_name) }
+            let(:stories) { [matching_story_one, matching_story_two] }
+            it do
+              expect(target).to receive(:share).with(stories)
+              observable_class.syndicate(stories)
+            end
+          end
+          context "some from matching provider are syndicated" do
+            let(:matching_story) { Butterfli::Story.new.merge!(source: provider_name) }
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            let(:stories) { [matching_story, non_matching_story] }
+            it do
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(stories)
+            end
+          end
+          context "none from matching provider are syndicated" do
+            let(:non_matching_story_one) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            let(:non_matching_story_two) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            let(:stories) { [non_matching_story_one, non_matching_story_two] }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(stories)
+            end
+          end
+        end
+      end
+      context "multiple providers to listen to" do
+        let(:provider_names) { [:good_provider_one, :good_provider_two] }
+        let(:non_matching_provider_name) { :bad_provider }
+        subject do
+          super().subscribe to: provider_names, &subscription
+        end
+
+        it_behaves_like "an observable #subscribe call"
+
+        context "and a single story" do
+          context "from matching provider is syndicated" do
+            let(:matching_story) { Butterfli::Story.new.merge!(source: provider_names.first) }
+            it do
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(matching_story)
+            end
+          end
+          context "from non-matching provider is syndicated" do
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(non_matching_story)
+            end
+          end
+        end
+        context "and multiple stories" do
+          context "all from matching provider are syndicated" do
+            let(:matching_story_one) { Butterfli::Story.new.merge!(source: provider_names.first) }
+            let(:matching_story_two) { Butterfli::Story.new.merge!(source: provider_names.last) }
+            let(:stories) { [matching_story_one, matching_story_two] }
+            it do
+              expect(target).to receive(:share).with(stories)
+              observable_class.syndicate(stories)
+            end
+          end
+          context "some from matching provider are syndicated" do
+            let(:matching_story) { Butterfli::Story.new.merge!(source: provider_names.first) }
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            let(:stories) { [matching_story, non_matching_story] }
+            it do
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(stories)
+            end
+          end
+          context "none from matching provider are syndicated" do
+            let(:non_matching_story_one) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            let(:non_matching_story_two) { Butterfli::Story.new.merge!(source: non_matching_provider_name) }
+            let(:stories) { [non_matching_story_one, non_matching_story_two] }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(stories)
+            end
+          end
+        end
+      end
+      context "both a provider and type to listen to" do
+        let(:subscription_type) { :image }
+        let(:other_subscription_type) { :video }
+        let(:provider_name) { :good_provider }
+        let(:non_matching_provider_name) { :bad_provider }
+        subject do
+          super().subscribe to: provider_name, type: subscription_type, &subscription
+        end
+
+        it_behaves_like "an observable #subscribe call"
+
+        context "and a single story" do
+          context "of both matching provider and type is syndicated" do
+            let(:matching_story) { Butterfli::Story.new.merge!(source: provider_name, type: subscription_type) }
+            it do
+              expect(target).to receive(:share).with([matching_story])
+              observable_class.syndicate(matching_story)
+            end
+          end
+          context "of matching provider but not type is syndicated" do
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: provider_name, type: other_subscription_type) }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(non_matching_story)
+            end
+          end
+          context "of matching type but not provider is syndicated" do
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: non_matching_provider_name, type: subscription_type) }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(non_matching_story)
+            end
+          end
+          context "of neither matching provider nor type is syndicated" do
+            let(:non_matching_story) { Butterfli::Story.new.merge!(source: non_matching_provider_name, type: other_subscription_type) }
+            it do
+              expect(target).to_not receive(:share)
+              observable_class.syndicate(non_matching_story)
             end
           end
         end

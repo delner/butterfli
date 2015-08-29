@@ -1,15 +1,29 @@
 module Butterfli::Observable
   class Subscription < Hash
+
     def initialize(options = {})
-      t = options[:types] || []
-      t = [t] if !t.is_a?(Array)
-      self.merge!(options.merge(types: t))
+      # TODO: This could be cleaner
+
+      [:types, :providers].each do |array_type|
+        val = options[array_type] || []
+        val = [val] if !val.is_a?(Array)
+        options.merge!(array_type => val)
+      end
+      self.merge!(options)
     end
     def types
       self[:types] ||= []
     end
+    def providers
+      self[:providers] ||= []
+    end
     def block
       self[:block]
+    end
+    def matches?(story)
+      return false if !self.providers.empty? && !self.providers.include?(story.source)
+      return false if !self.types.empty? && !self.types.include?(story.type)
+      true
     end
   end
 
@@ -22,26 +36,19 @@ module Butterfli::Observable
       @subscriptions ||= {}
     end
     def subscribe(options = {}, &block)
-      new_subscription = Butterfli::Observable::Subscription.new(types: options[:to], block: block)
+      criteria = { types: options[:type], providers: options[:to], block: block }
+      new_subscription = Butterfli::Observable::Subscription.new(criteria)
       key = block.object_id
       subscriptions[key] = new_subscription
       key
     end
     def syndicate(*stories)
       stories = stories.flatten
-      if !stories.empty?
-        story_groups = stories.group_by { |s| s.type }
+      # TODO: This could be more efficient... lots of comparisons made here
+      #       If we need to, we could do it by index? Keeping it simple for now.
+      if !stories.empty? && !subscriptions.empty?
         subscriptions.values.each do |subscription|
-          if subscription.types.empty?
-            # Then send everything
-            stories_to_send = story_groups.values.flatten
-          else
-            # Only send matching types
-            stories_to_send = subscription.types.inject([]) do |result, type|
-              result.concat(story_groups[type]) if story_groups.has_key?(type)
-              result
-            end
-          end
+          stories_to_send = stories.select { |story| subscription.matches?(story) }
           subscription.block.call(stories_to_send) if !stories_to_send.empty?
         end
       end
