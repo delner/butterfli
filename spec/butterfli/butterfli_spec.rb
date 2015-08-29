@@ -13,4 +13,8 @@ describe Butterfli do
     end
     it { expect(subject).to be_a_kind_of(Butterfli::Configuration::Base) }
   end
+  context "as observable" do
+    it { expect(subject).to respond_to(:subscribe) }
+    it { expect(subject).to respond_to(:syndicate) }
+  end
 end
