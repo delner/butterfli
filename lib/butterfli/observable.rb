@@ -36,11 +36,13 @@ module Butterfli::Observable
       @subscriptions ||= {}
     end
     def subscribe(options = {}, &block)
-      criteria = { types: options[:type], providers: options[:to], block: block }
-      new_subscription = Butterfli::Observable::Subscription.new(criteria)
-      key = block.object_id
-      subscriptions[key] = new_subscription
-      key
+      if block
+        criteria = { types: options[:type], providers: options[:to], block: block }
+        new_subscription = Butterfli::Observable::Subscription.new(criteria)
+        key = block.object_id
+        subscriptions[key] = new_subscription
+        key
+      end
     end
     def syndicate(*stories)
       stories = stories.flatten
@@ -59,3 +61,6 @@ module Butterfli::Observable
     end
   end
 end
+
+# Inject module into the global namespace
+Butterfli.class_eval { include Butterfli::Observable }
