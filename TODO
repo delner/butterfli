@@ -1,1 +1,4 @@
 1. Change to 'core' gem scheme? (Like RSpec?)
+2. Duplicate filtering: overlapping callbacks can produce duplicate stories
+  - Reduced by in-memory filter cache, but doesn't cover cluster setups
+  - butterfli-cache gem? (Connectors to external cache mechanisms like Redis or Memcached)
