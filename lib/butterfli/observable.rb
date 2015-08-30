@@ -3,11 +3,10 @@ module Butterfli::Observable
 
     def initialize(options = {})
       # TODO: This could be cleaner
-
       [:types, :providers].each do |array_type|
         val = options[array_type] || []
         val = [val] if !val.is_a?(Array)
-        options.merge!(array_type => val)
+        options.merge!(array_type => val.collect(&:to_sym))
       end
       self.merge!(options)
     end
