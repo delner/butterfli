@@ -1,4 +1,5 @@
 require 'butterfli/configuration/provider'
+require 'butterfli/configuration/observable'
 
 module Butterfli
   def self.configuration
@@ -13,6 +14,7 @@ module Butterfli
   module Configuration
     class Base
       include Butterfli::Configuration::Provisionable
+      include Butterfli::Configuration::Observable
     end
   end
 end
