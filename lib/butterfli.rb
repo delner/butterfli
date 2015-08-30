@@ -1,3 +1,6 @@
+require 'securerandom'
+require 'set'
+
 require "butterfli/version"
 require "butterfli/configuration"
 
