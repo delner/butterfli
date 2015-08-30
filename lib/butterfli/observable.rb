@@ -26,14 +26,35 @@ module Butterfli::Observable
     end
   end
 
+  class MemoryCacheFilter < Set
+    def self.max_size
+      Butterfli.configuration.memory_cache_filter_max_size
+    end
+    def push(*stories)
+      stories = stories.flatten
+      if (self.size + stories.length) > self.class.max_size
+        overflow = (self.size + stories.length) - self.class.max_size
+        overflow.times { self.delete(self.first) }
+      end
+      self.merge(stories.collect { |s| s.source_key })
+    end
+    def already_seen?(story)
+      self.include?(story.source_key)
+    end
+  end
+
   def self.included(base)
     base.extend(ClassMethods)
   end
   
   module ClassMethods
+    def filter_cache
+      @filter_cache ||= Butterfli::Observable::MemoryCacheFilter.new
+    end
     def subscriptions
       @subscriptions ||= {}
     end
+
     def subscribe(options = {}, &block)
       if block
         criteria = { types: options[:type], providers: options[:to], block: block }
@@ -44,7 +65,15 @@ module Butterfli::Observable
       end
     end
     def syndicate(*stories)
-      stories = stories.flatten
+      # Eliminate any obvious duplicates
+      stories = stories.flatten.uniq { |story| story.source_key }
+
+      # Cache some story keys in memory, if enabled, to further reduce duplication
+      if Butterfli.configuration.filter_duplicates_with_memory_cache
+        stories = stories.reject { |story| filter_cache.already_seen?(story) }
+        filter_cache.push(stories)
+      end
+
       # TODO: This could be more efficient... lots of comparisons made here
       #       If we need to, we could do it by index? Keeping it simple for now.
       if !stories.empty? && !subscriptions.empty?
