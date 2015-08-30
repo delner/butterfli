@@ -20,7 +20,7 @@ module Butterfli::Observable
       self[:block]
     end
     def matches?(story)
-      return false if !self.providers.empty? && !self.providers.include?(story.source)
+      return false if !self.providers.empty? && !self.providers.include?(story.source.name)
       return false if !self.types.empty? && !self.types.include?(story.type)
       true
     end
@@ -36,10 +36,10 @@ module Butterfli::Observable
         overflow = (self.size + stories.length) - self.class.max_size
         overflow.times { self.delete(self.first) }
       end
-      self.merge(stories.collect { |s| s.source_key })
+      self.merge(stories.collect { |s| s.source.key })
     end
     def already_seen?(story)
-      self.include?(story.source_key)
+      self.include?(story.source.key)
     end
   end
 
@@ -66,7 +66,7 @@ module Butterfli::Observable
     end
     def syndicate(*stories)
       # Eliminate any obvious duplicates
-      stories = stories.flatten.uniq { |story| story.source_key }
+      stories = stories.flatten.uniq { |story| story.source.key }
 
       # Cache some story keys in memory, if enabled, to further reduce duplication
       if Butterfli.configuration.filter_duplicates_with_memory_cache

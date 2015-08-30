@@ -57,9 +57,9 @@ end
 def build_story(options = {})
   story = Butterfli::Story.new
   story.type = options[:type]
-  story.source = options[:source]
-  story.references.source_id = SecureRandom.hex(4)
-  story.references.source_type = options[:type].to_s
+  story.source.name = options[:source]
+  story.source.id = SecureRandom.hex(4)
+  story.source.type = options[:type].to_s
   story
 end
 
