@@ -24,14 +24,14 @@ describe Butterfli::Worker do
     context "with no arguments" do
       subject { Butterfli::Worker.new }
       it do
-        expect(subject.after_cycle).to eq(:block)
+        expect(subject.after_work).to eq(:block)
         expect(subject.sleep_interval).to eq(1)
       end
     end
-    context "with 'after_cycle'" do
+    context "with 'after_work'" do
       let(:value) { :continuous }
-      subject { Butterfli::Worker.new(after_cycle: value) }
-      it { expect(subject.after_cycle).to eq(value) }
+      subject { Butterfli::Worker.new(after_work: value) }
+      it { expect(subject.after_work).to eq(value) }
     end
     context "with 'sleep_for'" do
       let(:value) { 5 }
@@ -160,16 +160,16 @@ describe Butterfli::Worker do
       end
     end
     context "with" do
-      context "'after_cycle = :block' set" do
-        let(:worker_options) { { after_cycle: :block } }
+      context "'after_work = :block' set" do
+        let(:worker_options) { { after_work: :block } }
         context "after worker completes a cycle" do
           let(:work_started_block) { Proc.new { true } }
           before(:each) { worker.start; sleep(0.01) }
           it { expect(subject).to be true }
         end
       end
-      context "'after_cycle = :sleep' set" do
-        let(:worker_options) { { after_cycle: :sleep } }
+      context "'after_work = :sleep' set" do
+        let(:worker_options) { { after_work: :sleep } }
         context "after worker completes a cycle" do
           let(:work_started_block) { Proc.new { true } }
           before(:each) { worker.start; sleep(0.01) }

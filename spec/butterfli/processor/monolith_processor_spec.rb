@@ -1,21 +1,18 @@
 require 'spec_helper'
 
-describe Butterfli::Processor do
-  let(:processor_options) { {} }
-  let(:processor) { Butterfli::Processor.new(processor_options) }
+describe Butterfli::MonolithProcessor do
+  let(:processor_options) { { num_workers: 1, after_work: :block } }
+  let(:processor) { Butterfli::MonolithProcessor.new(processor_options) }
 
-  it { expect(Butterfli::Processor < Butterfli::Workable).to be true }
-  it { expect(Butterfli::Processor < Butterfli::WorkPool).to be true }
+  it { expect(Butterfli::MonolithProcessor < Butterfli::Workable).to be true }
+  it { expect(Butterfli::MonolithProcessor < Butterfli::WorkPool).to be true }
 
   context "when initialized" do
     subject { processor }
-    context "with no arguments" do
-      it { expect(processor.workers).to have(1).items }
-    end
     context "with number of workers" do
-      let(:num_of_workers) { 2 }
-      let(:processor_options) { { num_of_workers: num_of_workers } }
-      it { expect(processor.workers).to have(num_of_workers).items }
+      let(:num_workers) { 2 }
+      let(:processor_options) { { num_workers: num_workers } }
+      it { expect(processor.workers).to have(num_workers).items }
     end
   end
   describe "#queue" do

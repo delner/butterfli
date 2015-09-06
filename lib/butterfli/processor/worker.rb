@@ -1,5 +1,5 @@
 class Butterfli::Worker
-  attr_accessor :thread, :signaled_to_run, :blocking, :after_cycle, :sleep_interval, :obituary
+  attr_accessor :thread, :signaled_to_run, :blocking, :after_work, :sleep_interval, :obituary
   attr_accessor :work_started_block, :work_completed_block, :work_error_block
 
   def initialize(work_item = nil, options = {})
@@ -7,7 +7,7 @@ class Butterfli::Worker
       options = work_item
       work_item = nil
     end
-    self.after_cycle = options[:after_cycle] || :block
+    self.after_work = options[:after_work] || :block
     self.sleep_interval = options[:sleep_for] || 1
     if work_item
       self.work_started_block = work_item.work_started_block
@@ -82,11 +82,11 @@ class Butterfli::Worker
         self.work_error_block.call(self, e) if self.work_error_block
       end
       if self.should_run?
-        if self.after_cycle == :block
+        if self.after_work == :block
           self.blocking = true
           Thread.stop 
           self.blocking = false
-        elsif self.after_cycle == :sleep
+        elsif self.after_work == :sleep
           sleep(self.sleep_interval)
         end
       end

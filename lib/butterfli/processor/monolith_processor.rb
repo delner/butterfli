@@ -1,16 +1,11 @@
-class Butterfli::Processor
+class Butterfli::MonolithProcessor
   include Butterfli::Workable
   include Butterfli::WorkPool
 
   def initialize(options = {})
-    # TODO: These defaults should be driven by Butterfli configuration
-    options[:num_of_workers] ||= 1
-    options[:after_cycle] ||= :block
-    options[:sleep_for] ||= 1
-
     self.setup_work_events
-    options[:num_of_workers].times do
-      self.workers << Butterfli::Worker.new(self, after_cycle: options[:after_cycle], sleep_for: options[:sleep_for])
+    options[:num_workers].times do
+      self.workers << Butterfli::Worker.new(self, after_work: options[:after_work], sleep_for: options[:sleep_for])
     end
     self
   end
