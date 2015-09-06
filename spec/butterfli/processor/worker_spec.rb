@@ -85,7 +85,6 @@ describe Butterfli::Worker do
       it do
         expect(subject).to be false
         expect(worker.thread).to be_nil
-
       end
     end
     context "while the worker is running" do
@@ -110,6 +109,37 @@ describe Butterfli::Worker do
       it do
         expect(subject).to be false
         expect(worker.thread.status).to be false
+      end
+    end
+  end
+  describe "#died_unexpectedly?" do
+    subject { worker.died_unexpectedly? }
+    context "before the worker is started" do
+      it { expect(subject).to be false }
+    end
+    context "while the worker is running" do
+      let(:work_started_block) { Proc.new { sleep(1) } }
+      before(:each) { worker.start }
+      it { expect(subject).to be false }
+    end
+    context "after the worker has been stopped" do
+      let(:work_started_block) { Proc.new { true } }
+      before(:each) { worker.start; sleep(0.01); worker.stop; sleep(0.01) }
+      it { expect(subject).to be false }
+    end
+    context "after the worker has been killed" do
+      let(:work_started_block) { Proc.new { true } }
+      before(:each) { worker.start; sleep(0.01); worker.kill; sleep(0.01) }
+      it { expect(subject).to be false }
+    end
+    context "after the worker dies unexpectedly" do
+      let(:error) { StandardError.new("This job was destined to fail.") }
+      let(:work_started_block) { Proc.new { raise error } }
+      let(:work_error_block) { Proc.new { |w, e| raise e } }
+      before(:each) { worker.start; sleep(0.01) }
+      it do
+        expect(subject).to be true
+        expect(worker.obituary).to eq(error)
       end
     end
   end
@@ -162,6 +192,27 @@ describe Butterfli::Worker do
         expect(subject).to be false
         expect(worker.thread.status).to be false
       end
+    end
+  end
+  describe "#stopped?" do
+    subject { worker.stopped? }
+    context "before the worker is started" do
+      it { expect(subject).to be true }
+    end
+    context "while the worker is running" do
+      let(:work_started_block) { Proc.new { sleep(1) } }
+      before(:each) { worker.start }
+      it { expect(subject).to be false }
+    end
+    context "after the worker has been stopped" do
+      let(:work_started_block) { Proc.new { true } }
+      before(:each) { worker.start; sleep(0.01); worker.stop; sleep(0.01) }
+      it { expect(subject).to be true }
+    end
+    context "after the worker has been killed" do
+      let(:work_started_block) { Proc.new { true } }
+      before(:each) { worker.start; sleep(0.01); worker.kill; sleep(0.01) }
+      it { expect(subject).to be true }
     end
   end
   describe "#should_run?" do

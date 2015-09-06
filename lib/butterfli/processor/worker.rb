@@ -18,15 +18,19 @@ class Butterfli::Worker
       self.work_completed_block = options[:on_work_completed]
       self.work_error_block = options[:on_work_error]
     end
+    self
   end
   def alive?
     !self.thread.nil? && self.thread.alive?
   end
   def died_unexpectedly?
-    !self.thread.alive? && self.thread.status.nil?
+    !self.thread.nil? && !self.alive? && self.thread.status.nil?
   end
   def blocking?
     self.blocking == true
+  end
+  def stopped?
+    self.thread.nil? || !self.alive?
   end
   def should_run?
     self.signaled_to_run == true
