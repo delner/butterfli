@@ -23,3 +23,4 @@ require 'butterfli/data'
 
 require 'butterfli/processor/workable'
 require 'butterfli/processor/worker'
+require 'butterfli/processor/work_pool'
