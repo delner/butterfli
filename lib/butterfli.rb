@@ -22,3 +22,4 @@ require 'butterfli/story'
 require 'butterfli/data'
 
 require 'butterfli/processor/workable'
+require 'butterfli/processor/worker'
