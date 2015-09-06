@@ -35,13 +35,22 @@ describe Butterfli::WorkPool do
       it_behaves_like "a multicasted work pool method", :start
     end
     describe "#wakeup" do
-      it_behaves_like "a multicasted work pool method", :start
+      it_behaves_like "a multicasted work pool method", :wakeup
     end
     describe "#stop" do
-      it_behaves_like "a multicasted work pool method", :start
+      it_behaves_like "a multicasted work pool method", :stop
     end
     describe "#kill" do
-      it_behaves_like "a multicasted work pool method", :start
+      it_behaves_like "a multicasted work pool method", :kill
+    end
+    describe "#alive?" do
+      it_behaves_like "a multicasted work pool method", :alive?
+    end
+    describe "#blocking?" do
+      it_behaves_like "a multicasted work pool method", :blocking?
+    end
+    describe "#stopped?" do
+      it_behaves_like "a multicasted work pool method", :stopped?
     end
   end
 end

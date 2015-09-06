@@ -14,4 +14,14 @@ module Butterfli::WorkPool
   def kill
     self.workers.each { |w| w.kill }
   end
+
+  def alive?
+    self.workers.any? { |w| w.alive? }
+  end
+  def blocking?
+    self.workers.all? { |w| w.blocking? }
+  end
+  def stopped?
+    self.workers.all? { |w| w.stopped? }
+  end
 end
