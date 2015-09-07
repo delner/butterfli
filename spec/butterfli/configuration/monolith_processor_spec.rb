@@ -6,6 +6,7 @@ describe Butterfli::Configuration::MonolithProcessor do
     let(:num_workers) { 1 }
     let(:sleep_for) { 5 }
     before do
+      Butterfli.processor = nil
       Butterfli.configure do |config|
         config.processor :monolith do |processor|
           processor.after_work = after_work
@@ -14,6 +15,7 @@ describe Butterfli::Configuration::MonolithProcessor do
         end
       end
     end
+    after { Butterfli.processor = nil }
     subject { Butterfli.processor }
     it do
       expect(subject).to be_a_kind_of(Butterfli::MonolithProcessor)
