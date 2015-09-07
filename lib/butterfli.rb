@@ -21,13 +21,20 @@ require 'butterfli/story'
 
 require 'butterfli/data'
 
-require 'butterfli/processor/workable'
-require 'butterfli/processor/worker'
-require 'butterfli/processor/work_pool'
-require 'butterfli/processor/writer'
-require 'butterfli/processor/syndicate_writer'
-require 'butterfli/processor/job'
-require 'butterfli/processor/story_job'
-require 'butterfli/processor/base'
-require 'butterfli/processor/monolith_processor'
+require 'butterfli/writing/writer'
+require 'butterfli/writing'
+
+require 'butterfli/writing/syndicate_writer'
+require 'butterfli/configuration/writers/syndicate_writer'
+
+require 'butterfli/jobs/job'
+require 'butterfli/jobs/story_job'
+
+require 'butterfli/processing/workable'
+require 'butterfli/processing/worker'
+require 'butterfli/processing/work_pool'
+require 'butterfli/processing/base'
 require 'butterfli/processing'
+
+require 'butterfli/processing/processors/monolith_processor'
+require 'butterfli/configuration/processors/monolith_processor'

@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Butterfli::Configuration::MonolithProcessor do
   context "when configured in Butterfli" do
-    let(:after_work) { :block }
-    let(:num_workers) { 1 }
-    let(:sleep_for) { 5 }
+    let(:after_work) { :sleep }
+    let(:num_workers) { 2 }
+    let(:sleep_for) { 10 }
     before do
       Butterfli.processor = nil
       Butterfli.configure do |config|

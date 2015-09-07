@@ -44,7 +44,11 @@ class Butterfli::MonolithProcessor < Butterfli::Processor::Base
       while self.pending_jobs?
         job = self.dequeue
         begin
-          completed_jobs << job.work if !job.nil?
+          output = job.work if !job.nil?
+          if writers = Butterfli.writers
+            writers.each { |w| w.write_with_error_handling(output) }
+          end
+          completed_jobs << output
         rescue => error
           puts "Job failed!: #{error.message} #{error.backtrace}"
         end

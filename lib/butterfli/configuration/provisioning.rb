@@ -4,7 +4,7 @@ module Butterfli
     end
 
     # Adds methods for configuring providers to the Butterfli configuration
-    module Provisionable
+    module Provisioning
       def provider(name, &block)
         @providers ||= {}
 

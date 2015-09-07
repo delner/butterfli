@@ -17,5 +17,12 @@ describe Butterfli::SyndicateWriter do
         subject
       end
     end
+    context "invoked with a non-story object" do
+      let(:stories) { "I'm just a string." }
+      it do
+        expect(target).to_not receive(:share)
+        subject
+      end
+    end
   end
 end

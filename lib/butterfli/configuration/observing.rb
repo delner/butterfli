@@ -1,6 +1,6 @@
 module Butterfli
   module Configuration
-    module Observable
+    module Observing
       def filter_duplicates_with_memory_cache
         @filter_duplicates_with_memory_cache ||= false
       end

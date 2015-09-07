@@ -17,4 +17,10 @@ describe Butterfli do
     it { expect(subject).to respond_to(:subscribe) }
     it { expect(subject).to respond_to(:syndicate) }
   end
+  context "as a processor" do
+    it { expect(subject).to respond_to(:processor) }
+  end
+  context "as a writer" do
+    it { expect(subject).to respond_to(:writers) }
+  end
 end

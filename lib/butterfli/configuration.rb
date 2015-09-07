@@ -1,6 +1,7 @@
-require 'butterfli/configuration/provider'
-require 'butterfli/configuration/observable'
-require 'butterfli/configuration/processor'
+require 'butterfli/configuration/provisioning'
+require 'butterfli/configuration/observing'
+require 'butterfli/configuration/writing'
+require 'butterfli/configuration/processing'
 
 module Butterfli
   def self.configuration
@@ -14,9 +15,10 @@ module Butterfli
 
   module Configuration
     class Base
-      include Butterfli::Configuration::Provisionable
-      include Butterfli::Configuration::Observable
-      include Butterfli::Configuration::Processable
+      include Butterfli::Configuration::Provisioning
+      include Butterfli::Configuration::Observing
+      include Butterfli::Configuration::Writing
+      include Butterfli::Configuration::Processing
     end
   end
 end

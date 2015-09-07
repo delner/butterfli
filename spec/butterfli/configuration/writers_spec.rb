@@ -3,6 +3,17 @@ require 'spec_helper'
 describe Butterfli::Configuration::Writers do
   subject { Butterfli::Configuration::Writers }
 
+  # Create fake writer to drive tests
+  let(:writer_name) { :test_writer }
+  let(:writer_config_class) do
+    stub_const 'TestWriterConfig', Class.new(Butterfli::Configuration::Writer)
+    TestWriterConfig
+  end
+  let(:writer_class) do
+    stub_const 'TestWriter', Class.new(Butterfli::Writer)
+    TestWriter
+  end
+
   describe "#known_writers" do
     subject { super().known_writers }
 
@@ -12,45 +23,33 @@ describe Butterfli::Configuration::Writers do
   end
 
   describe "#register_writer" do
-    subject { super().register_writer(writer_name, writer_class) }
-
-    # Create fake writer to drive tests
-    let(:writer_name) { :test_writer }
-    let(:writer_class) do
-      stub_const 'TestWriter', Class.new(Butterfli::Configuration::Writer)
-      TestWriter
-    end
+    subject { super().register_writer(writer_name, writer_config_class, writer_class) }
 
     context "when invoked with a writer name and class" do
       it do
-        expect(subject).to eq(writer_class)
+        expect(subject).to eq({ configuration: writer_config_class, instance: writer_class})
         expect(Butterfli::Configuration::Writers.known_writers).to include(writer_name)
       end
     end
   end
 
   describe "#instantiate_writer" do
-    subject { super().instantiate_writer(writer_name) }
+    before { Butterfli::Configuration::Writers.register_writer(writer_name, writer_config_class, writer_class) }
 
-    # Create fake writer to drive tests
-    let(:writer_class) do
-      stub_const 'TestWriter', Class.new(Butterfli::Configuration::Writer)
-      TestWriter
-    end
-    before { Butterfli::Configuration::Writers.register_writer(:test_writer, writer_class) }
+    subject { super().instantiate_writer(writer_name) }
 
     context "when invoked with a known writer" do
       context "(as a Symbol)" do
         let(:writer_name) { :test_writer }
-        it { expect(subject).to be_a_kind_of(writer_class) }
+        it { expect(subject).to be_a_kind_of(writer_config_class) }
       end
       context "(as a String)" do
         let(:writer_name) { "test_writer" }
-        it { expect(subject).to be_a_kind_of(writer_class) }
+        it { expect(subject).to be_a_kind_of(writer_config_class) }
       end
     end
     context "when invoked with an unknown writer" do
-      let(:writer_name) { :unknown_writer }
+      subject { Butterfli::Configuration::Writers.instantiate_writer(:unknown_writer) }
       it do
         expect { subject }.to raise_error(RuntimeError)
       end
