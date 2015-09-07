@@ -198,12 +198,13 @@ describe Butterfli::Observable do
     end
     context "with the 'filter_duplicates_with_memory_cache' option enabled" do
       let(:max_cache_size) { 10 }
-      before do
+      before(:each) do
         Butterfli.configure do |config|
           config.filter_duplicates_with_memory_cache = true
           config.memory_cache_filter_max_size = max_cache_size
         end
       end
+      after(:each) { Butterfli.configure { } }
       subject do
         super().subscribe &subscription
       end
