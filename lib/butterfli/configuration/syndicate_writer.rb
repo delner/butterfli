@@ -1,6 +1,9 @@
-class Butterfli::Configuration::SyndicateWriter < Butterfli::Configuration::Processor
+class Butterfli::Configuration::SyndicateWriter < Butterfli::Configuration::Writer
+  # def initialize(options = {})
+  #   super
+  # end
   def instantiate
-    ::Butterfli::SyndicateWriter.new
+    ::Butterfli::SyndicateWriter.new(write_error_block: self.write_error_block)
   end
 end
 

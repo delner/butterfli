@@ -16,7 +16,7 @@ class Butterfli::StoryJob < Butterfli::Job
   def write_stories(stories)
     return if stories.empty?
     if writers = (Butterfli.processor && Butterfli.processor.writers)
-      writers.each { |w| w.write(stories) }
+      writers.each { |w| w.write_with_error_handling(stories) }
     end
   end
 end

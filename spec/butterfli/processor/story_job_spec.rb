@@ -41,7 +41,7 @@ describe Butterfli::StoryJob do
           context "which returns a Story" do
             let(:get_stories_block) { Proc.new { return Butterfli::Story.new } }
             it do
-              expect(writer).to receive(:write).with(instance_of(Array)).exactly(1).times
+              expect(writer).to receive(:write_with_error_handling).with(instance_of(Array)).exactly(1).times
               expect(subject).to have(1).items
             end
           end
@@ -52,13 +52,17 @@ describe Butterfli::StoryJob do
           context "which returns an Array containing Story objects" do
             let(:get_stories_block) { Proc.new { return [Butterfli::Story.new, Butterfli::Story.new] } }
             it do
-              expect(writer).to receive(:write).with(instance_of(Array)).exactly(1).times
+              expect(writer).to receive(:write_with_error_handling).with(instance_of(Array)).exactly(1).times
               expect(subject).to have(2).items
             end
           end
           context "which returns an Array containing non-Story objects" do
             let(:get_stories_block) { Proc.new { return [1, 2] } }
             it { expect(subject).to be_empty }
+          end
+          context "which raises a StandardError" do
+            let(:get_stories_block) { Proc.new { raise "This job was destined to fail." } }
+            it { expect { subject }.to raise_error(StandardError) }
           end
         end
       end

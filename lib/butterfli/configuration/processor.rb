@@ -1,6 +1,10 @@
 module Butterfli
   module Configuration
     class Writer
+      attr_accessor :write_error_block
+      def on_write_error(&block)
+        self.write_error_block = block
+      end
     end
 
     class Processor
