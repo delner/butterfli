@@ -1,0 +1,2 @@
+class Butterfli::Writer
+end
