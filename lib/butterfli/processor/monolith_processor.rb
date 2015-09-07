@@ -1,8 +1,9 @@
-class Butterfli::MonolithProcessor
+class Butterfli::MonolithProcessor < Butterfli::Processor::Base
   include Butterfli::Workable
   include Butterfli::WorkPool
 
   def initialize(options = {})
+    super
     self.setup_work_events
     options[:num_workers].times do
       self.workers << Butterfli::Worker.new(self, after_work: options[:after_work], sleep_for: options[:sleep_for])
