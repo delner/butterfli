@@ -20,3 +20,10 @@ require 'butterfli/story/mappable'
 require 'butterfli/story'
 
 require 'butterfli/data'
+
+require 'butterfli/processor/workable'
+require 'butterfli/processor/worker'
+require 'butterfli/processor/work_pool'
+require 'butterfli/processor/job'
+require 'butterfli/processor/monolith_processor'
+require 'butterfli/processing'

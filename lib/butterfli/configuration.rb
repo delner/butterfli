@@ -1,5 +1,7 @@
 require 'butterfli/configuration/provider'
 require 'butterfli/configuration/observable'
+require 'butterfli/configuration/processable'
+require 'butterfli/configuration/monolith_processor'
 
 module Butterfli
   def self.configuration
@@ -15,6 +17,7 @@ module Butterfli
     class Base
       include Butterfli::Configuration::Provisionable
       include Butterfli::Configuration::Observable
+      include Butterfli::Configuration::Processable
     end
   end
 end
