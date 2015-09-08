@@ -68,18 +68,20 @@ module Butterfli::Observable
       # Eliminate any obvious duplicates
       stories = stories.flatten.uniq { |story| story.source.key }
 
-      # Cache some story keys in memory, if enabled, to further reduce duplication
-      if Butterfli.configuration.filter_duplicates_with_memory_cache
-        stories = stories.reject { |story| filter_cache.already_seen?(story) }
-        filter_cache.push(stories)
-      end
+      if !stories.empty?
+        # Cache some story keys in memory, if enabled, to further reduce duplication
+        if Butterfli.configuration.filter_duplicates_with_memory_cache
+          stories = stories.reject { |story| filter_cache.already_seen?(story) }
+          filter_cache.push(stories)
+        end
 
-      # TODO: This could be more efficient... lots of comparisons made here
-      #       If we need to, we could do it by index? Keeping it simple for now.
-      if !stories.empty? && !subscriptions.empty?
-        subscriptions.values.each do |subscription|
-          stories_to_send = stories.select { |story| subscription.matches?(story) }
-          subscription.block.call(stories_to_send) if !stories_to_send.empty?
+        # TODO: This could be more efficient... lots of comparisons made here
+        #       If we need to, we could do it by index? Keeping it simple for now.
+        if !subscriptions.empty?
+          subscriptions.values.each do |subscription|
+            stories_to_send = stories.select { |story| subscription.matches?(story) }
+            subscription.block.call(stories_to_send) if !stories_to_send.empty?
+          end
         end
       end
       stories

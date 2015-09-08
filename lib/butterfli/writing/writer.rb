@@ -18,7 +18,7 @@ class Butterfli::Writer
     end
   end
   def are_stories?(output)
-    if output.class <= Butterfli::Story || (output.class <= Array && output.all? { |i| i.class <= Butterfli::Story })
+    if output.class <= Butterfli::Story || (output.class <= Array && !output.empty? && output.all? { |i| i.class <= Butterfli::Story })
       true
     else
       false
