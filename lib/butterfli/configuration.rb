@@ -1,6 +1,7 @@
 require 'butterfli/configuration/provisioning'
 require 'butterfli/configuration/observing'
 require 'butterfli/configuration/writing'
+require 'butterfli/configuration/caching'
 require 'butterfli/configuration/processing'
 
 module Butterfli

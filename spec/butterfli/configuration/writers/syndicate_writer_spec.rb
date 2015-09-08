@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Butterfli::Configuration::SyndicateWriter do
-  context "when configured within a processor in Butterfli" do
+  context "when configured within Butterfli" do
     let(:write_error_block) { Proc.new { } }
     before do
       Butterfli.writers = nil

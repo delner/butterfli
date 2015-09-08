@@ -17,7 +17,7 @@ module Butterfli
       def processor(name = nil, &block)
         if !name.nil?
           new_processor = Butterfli::Configuration::Processors.instantiate_processor(name)
-          block.call(new_processor)
+          block.call(new_processor) if !block.nil?
           @processor = new_processor
         else
           @processor

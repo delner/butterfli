@@ -10,7 +10,7 @@ class Butterfli::Configuration::MonolithProcessor < Butterfli::Configuration::Pr
   end
 end
 
-# Add it to the known providers list...
+# Add it to the known processors list...
 Butterfli::Configuration::Processors.register_processor(:monolith,
                                                         Butterfli::Configuration::MonolithProcessor,
                                                         Butterfli::MonolithProcessor)
