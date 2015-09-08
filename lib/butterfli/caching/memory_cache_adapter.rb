@@ -10,8 +10,11 @@ class Butterfli::MemoryCacheAdapter
   def write(key, value)
     self.memory_cache[key] = value
   end
-  def fetch(key, value = nil, &block)
-    self.memory_cache.has_key?(key) ? self.memory_cache[key] : (self.memory_cache[key] = (value || block.call))
+  def fetch(key, value)
+    self.memory_cache.has_key?(key) ? self.memory_cache[key] : (self.memory_cache[key] = value)
+  end
+  def lazy_fetch(key, &block)
+    self.memory_cache.has_key?(key) ? self.memory_cache[key] : (self.memory_cache[key] = block.call)
   end
   def delete(key)
     self.memory_cache.delete(key)

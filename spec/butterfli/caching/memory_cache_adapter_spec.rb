@@ -29,30 +29,32 @@ describe Butterfli::Cache do
     end
   end
   context "#fetch" do
+    subject { adapter.fetch(key, value) }
     let(:key) { "key" }
     let(:value) { "value" }
+
+    context "invoked against existing key" do
+      let(:old_value) { "old_value" }
+      before(:each) { adapter.write(key, old_value) }
+      it { expect(subject).to eq(old_value) }
+    end
+    context "invoked against non-existent key" do
+      it { expect(subject).to eq(value) }
+    end
+  end
+  context "#lazy_fetch" do
+    subject { adapter.lazy_fetch(key, &block) }
+    let(:key) { "key" }
     let(:block_value) { "block value" }
     let(:block) { Proc.new { block_value } }
 
     context "invoked against existing key" do
       let(:old_value) { "old_value" }
       before(:each) { adapter.write(key, old_value) }
-      subject { adapter.fetch(key, value) }
       it { expect(subject).to eq(old_value) }
     end
     context "invoked against non-existent key" do
-      context "when passed a value" do
-        subject { adapter.fetch(key, value) }
-        it { expect(subject).to eq(value) }
-      end
-      context "when passed a block" do
-        subject { adapter.fetch(key, &block) }
-        it { expect(subject).to eq(block_value) }
-      end
-      context "when passed a value and block" do
-        subject { adapter.fetch(key, value, &block) }
-        it { expect(subject).to eq(value) }
-      end
+      it { expect(subject).to eq(block_value) }
     end
   end
   context "#delete" do

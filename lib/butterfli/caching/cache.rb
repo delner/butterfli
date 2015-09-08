@@ -10,8 +10,11 @@ class Butterfli::Cache
   def write(key, value)
     self.adapter.write(key, value)
   end
-  def fetch(key, value = nil, &block)
-    self.adapter.fetch(key, value, &block)
+  def fetch(key, value)
+    self.adapter.fetch(key, value)
+  end
+  def lazy_fetch(key, &block)
+    self.adapter.lazy_fetch(key, &block)
   end
   def delete(key)
     self.adapter.delete(key)

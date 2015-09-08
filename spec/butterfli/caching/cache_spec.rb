@@ -19,12 +19,17 @@ describe Butterfli::Cache do
     it { expect(adapter).to receive(:write).with(key, value).exactly(1).times; subject }
   end
   context "#fetch" do
-    subject { cache.fetch(key, value, &value_block) }
+    subject { cache.fetch(key, value) }
     let(:key) { "key" }
     let(:value) { "value" }
+    it { expect(adapter).to receive(:fetch).with(key, value).exactly(1).times; subject }
+  end
+  context "#lazy_fetch" do
+    subject { cache.lazy_fetch(key, &value_block) }
+    let(:key) { "key" }
     let(:value_block) { Proc.new { "block value" } }
     # Rspec is kind of dumb: it doesn't know how to expect block arguments
-    it { expect(adapter).to receive(:fetch).with(key, value).exactly(1).times; subject }
+    it { expect(adapter).to receive(:lazy_fetch).with(key).exactly(1).times; subject }
   end
   context "#delete" do
     subject { cache.delete(key) }
