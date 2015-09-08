@@ -30,6 +30,9 @@ require 'butterfli/configuration/writers/syndicate_writer'
 require 'butterfli/caching/cache'
 require 'butterfli/caching'
 
+require 'butterfli/caching/memory_cache_adapter'
+require 'butterfli/configuration/caches/memory_cache'
+
 require 'butterfli/jobs/job'
 require 'butterfli/jobs/story_job'
 
