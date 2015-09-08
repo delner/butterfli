@@ -23,4 +23,7 @@ describe Butterfli do
   context "as a writer" do
     it { expect(subject).to respond_to(:writers) }
   end
+  context "as a cache" do
+    it { expect(subject).to respond_to(:cache) }
+  end
 end

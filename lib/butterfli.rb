@@ -27,6 +27,9 @@ require 'butterfli/writing'
 require 'butterfli/writing/syndicate_writer'
 require 'butterfli/configuration/writers/syndicate_writer'
 
+require 'butterfli/caching/cache'
+require 'butterfli/caching'
+
 require 'butterfli/jobs/job'
 require 'butterfli/jobs/story_job'
 
