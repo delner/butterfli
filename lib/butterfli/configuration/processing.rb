@@ -1,10 +1,6 @@
 module Butterfli
   module Configuration
     class Processor
-      attr_accessor :instance_class
-      def initialize(options = {})
-        self.instance_class = options[:instance_class]
-      end
       def instantiate
         self.instance_class.new(options)
       end
@@ -30,13 +26,13 @@ module Butterfli
       def self.known_processors
         @known_processors ||= {}
       end
-      def self.register_processor(name, config_class, instance_class)
-        self.known_processors[name.to_sym] = { configuration: config_class, instance: instance_class }
+      def self.register_processor(name, klass)
+        self.known_processors[name.to_sym] = klass
       end
       def self.instantiate_processor(name, options = {})
         processor = self.known_processors[name.to_sym]
         if processor
-          processor[:configuration].new(instance_class: processor[:instance])
+          processor.new
         else
           raise "Unknown processor: #{name}!"
         end

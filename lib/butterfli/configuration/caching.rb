@@ -1,10 +1,6 @@
 module Butterfli
   module Configuration
     class Cache
-      attr_accessor :instance_class
-      def initialize(options = {})
-        self.instance_class = options[:instance_class]
-      end
       def instantiate
         Butterfli::Cache.new(self.instance_class.new(options))
       end
@@ -30,13 +26,13 @@ module Butterfli
       def self.known_caches
         @known_caches ||= {}
       end
-      def self.register_cache(name, config_class, instance_class)
-        self.known_caches[name.to_sym] = { configuration: config_class, instance: instance_class }
+      def self.register_cache(name, klass)
+        self.known_caches[name.to_sym] = klass
       end
       def self.instantiate_cache(name, options = {})
         cache = self.known_caches[name.to_sym]
         if cache
-          cache[:configuration].new(instance_class: cache[:instance])
+          cache.new
         else
           raise "Unknown cache: #{name}!"
         end

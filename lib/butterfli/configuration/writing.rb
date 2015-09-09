@@ -11,10 +11,7 @@ module Butterfli
       end
 
       class Writer
-        attr_accessor :instance_class, :write_error_block
-        def initialize(options = {})
-          self.instance_class = options[:instance_class]
-        end
+        attr_accessor :write_error_block
         def instantiate
           self.instance_class.new(options)
         end
@@ -32,13 +29,13 @@ module Butterfli
       def self.known_writers
         @known_writers ||= {}
       end
-      def self.register_writer(name, config_class, instance_class)
-        self.known_writers[name.to_sym] = { configuration: config_class, instance: instance_class }
+      def self.register_writer(name, klass)
+        self.known_writers[name.to_sym] = klass
       end
       def self.instantiate_writer(name, options = {})
         writer = self.known_writers[name.to_sym]
         if writer
-          writer[:configuration].new(instance_class: writer[:instance])
+          writer.new
         else
           raise "Unknown writer: #{name}!"
         end

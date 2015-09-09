@@ -9,10 +9,6 @@ describe Butterfli::Configuration::Caches do
     stub_const 'TestCacheConfig', Class.new(Butterfli::Configuration::Cache)
     TestCacheConfig
   end
-  let(:cache_class) do
-    stub_const 'TestCacheAdapter', Class.new
-    TestCacheAdapter
-  end
 
   describe "#known_caches" do
     subject { super().known_caches }
@@ -23,18 +19,18 @@ describe Butterfli::Configuration::Caches do
   end
 
   describe "#register_cache" do
-    subject { super().register_cache(cache_name, cache_config_class, cache_class) }
+    subject { super().register_cache(cache_name, cache_config_class) }
 
     context "when invoked with a cache name and class" do
       it do
-        expect(subject).to eq({ configuration: cache_config_class, instance: cache_class})
+        expect(subject).to eq(cache_config_class)
         expect(Butterfli::Configuration::Caches.known_caches).to include(cache_name)
       end
     end
   end
 
   describe "#instantiate_cache" do
-    before { Butterfli::Configuration::Caches.register_cache(cache_name, cache_config_class, cache_class) }
+    before { Butterfli::Configuration::Caches.register_cache(cache_name, cache_config_class) }
 
     subject { super().instantiate_cache(cache_name) }
 

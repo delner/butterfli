@@ -23,18 +23,18 @@ describe Butterfli::Configuration::Writers do
   end
 
   describe "#register_writer" do
-    subject { super().register_writer(writer_name, writer_config_class, writer_class) }
+    subject { super().register_writer(writer_name, writer_config_class) }
 
     context "when invoked with a writer name and class" do
       it do
-        expect(subject).to eq({ configuration: writer_config_class, instance: writer_class})
+        expect(subject).to eq(writer_config_class)
         expect(Butterfli::Configuration::Writers.known_writers).to include(writer_name)
       end
     end
   end
 
   describe "#instantiate_writer" do
-    before { Butterfli::Configuration::Writers.register_writer(writer_name, writer_config_class, writer_class) }
+    before { Butterfli::Configuration::Writers.register_writer(writer_name, writer_config_class) }
 
     subject { super().instantiate_writer(writer_name) }
 

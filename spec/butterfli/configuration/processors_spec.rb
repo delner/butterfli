@@ -9,10 +9,6 @@ describe Butterfli::Configuration::Processors do
     stub_const 'TestProcessorConfig', Class.new(Butterfli::Configuration::Processor)
     TestProcessorConfig
   end
-  let(:processor_class) do
-    stub_const 'TestProcessor', Class.new(Butterfli::Processor::Base)
-    TestProcessor
-  end
 
   describe "#known_processors" do
     subject { super().known_processors }
@@ -23,18 +19,18 @@ describe Butterfli::Configuration::Processors do
   end
 
   describe "#register_processor" do
-    subject { super().register_processor(processor_name, processor_config_class, processor_class) }
+    subject { super().register_processor(processor_name, processor_config_class) }
 
     context "when invoked with a processor name and class" do
       it do
-        expect(subject).to eq({ configuration: processor_config_class, instance: processor_class})
+        expect(subject).to eq(processor_config_class)
         expect(Butterfli::Configuration::Processors.known_processors).to include(processor_name)
       end
     end
   end
 
   describe "#instantiate_processor" do
-    before { Butterfli::Configuration::Processors.register_processor(processor_name, processor_config_class, processor_class) }
+    before { Butterfli::Configuration::Processors.register_processor(processor_name, processor_config_class) }
 
     subject { super().instantiate_processor(processor_name) }
 
