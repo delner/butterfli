@@ -41,6 +41,12 @@ class Butterfli::Job
   def eql?(other)
     self.hash == other.hash
   end
+  def before_work(&block)
+    self.before_work_callbacks << block
+  end
+  def after_work(&block)
+    self.after_work_callbacks << block
+  end
   def work
     raise NoMethodError, "#{self.class.name} does not implement #do_work!" if !self.respond_to?(:do_work)
     do_before_work_callbacks
@@ -49,9 +55,9 @@ class Butterfli::Job
     result
   end
   def do_before_work_callbacks
-    self.before_work_callbacks.each { |c| c.call }
+    self.before_work_callbacks.each { |c| c.call(self) }
   end
   def do_after_work_callbacks(result)
-    self.after_work_callbacks.each { |c| c.call(result) }
+    self.after_work_callbacks.each { |c| c.call(self, result) }
   end
 end

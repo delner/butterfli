@@ -6,20 +6,38 @@ describe Butterfli::Job do
 
   context "#before_work" do
     let(:callback) { Proc.new { } }
-    subject { Butterfli::Job.before_work &callback }
-    it do
-      subject
-      expect(Butterfli::Job.before_work_callbacks).to include(callback)
-      expect(Butterfli::Job.new.before_work_callbacks).to include(callback)
+    context "on the class" do
+      subject { Butterfli::Job.before_work &callback }
+      it do
+        subject
+        expect(Butterfli::Job.before_work_callbacks).to include(callback)
+        expect(Butterfli::Job.new.before_work_callbacks).to include(callback)
+      end
+    end
+    context "on an instance" do
+      let(:job) { Butterfli::Job.new }
+      subject { job.after_work &callback }
+      it do
+        subject; expect(job.after_work_callbacks).to include(callback)
+      end
     end
   end
   context "#after_work" do
     let(:callback) { Proc.new { } }
-    subject { Butterfli::Job.after_work &callback }
-    it do
-      subject
-      expect(Butterfli::Job.after_work_callbacks).to include(callback)
-      expect(Butterfli::Job.new.after_work_callbacks).to include(callback)
+    context "on the class" do
+      subject { Butterfli::Job.after_work &callback }
+      it do
+        subject
+        expect(Butterfli::Job.after_work_callbacks).to include(callback)
+        expect(Butterfli::Job.new.after_work_callbacks).to include(callback)
+      end
+    end
+    context "on an instance" do
+      let(:job) { Butterfli::Job.new }
+      subject { job.after_work &callback }
+      it do
+        subject; expect(job.after_work_callbacks).to include(callback)
+      end
     end
   end
 
@@ -82,16 +100,16 @@ describe Butterfli::Job do
     subject { job.work }
     context "when callbacks are attached" do
       let(:target) { double('target') }
-      let(:before_callback) { Proc.new { target.before } }
-      let(:after_callback) { Proc.new { |output| target.after(output) } }
+      let(:before_callback) { Proc.new { |j| target.before(j) } }
+      let(:after_callback) { Proc.new { |j, output| target.after(j, output) } }
       before(:each) do
         Butterfli::Job.before_work &before_callback
         Butterfli::Job.after_work &after_callback
         job.set_do_work_block do work_output end
       end
       it do
-        expect(target).to receive(:before).exactly(1).times
-        expect(target).to receive(:after).with(work_output).exactly(1).times
+        expect(target).to receive(:before).with(job).exactly(1).times
+        expect(target).to receive(:after).with(job, work_output).exactly(1).times
         expect(subject).to eq(work_output)
       end
     end
