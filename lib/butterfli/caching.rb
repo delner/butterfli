@@ -8,7 +8,12 @@ module Butterfli::Caching
       @cache = p
     end
     def cache
-      return @cache || (self.cache = ( Butterfli.configuration.cache && Butterfli.configuration.cache.instantiate))
+      return @cache || (self.cache = default_cache)
+    end
+
+    private
+    def default_cache
+      (Butterfli.configuration.cache && Butterfli.configuration.cache.instantiate) || Butterfli::Configuration::MemoryCache.new.instantiate
     end
   end
 end
