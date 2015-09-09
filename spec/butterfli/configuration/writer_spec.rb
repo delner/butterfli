@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Butterfli::Configuration::Writer do
-  let(:writer) { Butterfli::Configuration::Writer.new }
+describe Butterfli::Configuration::Writing::Writer do
+  let(:writer) { Butterfli::Configuration::Writing::Writer.new }
   subject { writer }
 
   context "#on_write_error" do

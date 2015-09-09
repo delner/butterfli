@@ -94,17 +94,6 @@ describe Butterfli::MonolithProcessor do
         processor.enqueue(job)
         sleep(0.03) # Give worker a chance to do work
       end
-      context "and a writer is present" do
-        let(:writer) { double('writer') }
-        before(:each) { Butterfli.writers = [writer] }
-        after(:each) { Butterfli.writers = nil }
-        it do
-          expect(job).to receive(:work).exactly(1).times
-          expect(writer).to receive(:write_with_error_handling).with(return_value).exactly(1).times
-          processor.enqueue(job)
-          sleep(0.03) # Give worker a chance to do work
-        end
-      end
     end
   end
 end

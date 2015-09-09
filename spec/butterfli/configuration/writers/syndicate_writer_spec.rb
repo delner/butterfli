@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Butterfli::Configuration::SyndicateWriter do
+describe Butterfli::Configuration::Writing::SyndicateWriter do
   context "when configured within Butterfli" do
     let(:write_error_block) { Proc.new { } }
     before do
@@ -14,7 +14,7 @@ describe Butterfli::Configuration::SyndicateWriter do
     after { Butterfli.writers = nil; Butterfli.configure { } }
     subject { Butterfli.writers.first }
     it do
-      expect(subject).to be_a_kind_of(Butterfli::SyndicateWriter)
+      expect(subject).to be_a_kind_of(Butterfli::Writing::SyndicateWriter)
       expect(subject.write_error_block).to eq(write_error_block)
     end
   end

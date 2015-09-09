@@ -6,11 +6,11 @@ describe Butterfli::Configuration::Writers do
   # Create fake writer to drive tests
   let(:writer_name) { :test_writer }
   let(:writer_config_class) do
-    stub_const 'TestWriterConfig', Class.new(Butterfli::Configuration::Writer)
+    stub_const 'TestWriterConfig', Class.new(Butterfli::Configuration::Writing::Writer)
     TestWriterConfig
   end
   let(:writer_class) do
-    stub_const 'TestWriter', Class.new(Butterfli::Writer)
+    stub_const 'TestWriter', Class.new(Butterfli::Writing::Writer)
     TestWriter
   end
 

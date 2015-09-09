@@ -1,21 +1,5 @@
 module Butterfli
   module Configuration
-    class Writer
-      attr_accessor :instance_class, :write_error_block
-      def initialize(options = {})
-        self.instance_class = options[:instance_class]
-      end
-      def instantiate
-        self.instance_class.new(options)
-      end
-      def options
-        { write_error_block: self.write_error_block }
-      end
-      def on_write_error(&block)
-        self.write_error_block = block
-      end
-    end
-
     module Writing
       def writer(name, &block)
         new_writer = Butterfli::Configuration::Writers.instantiate_writer(name)
@@ -24,6 +8,22 @@ module Butterfli
       end
       def writers
         @writers ||= []
+      end
+
+      class Writer
+        attr_accessor :instance_class, :write_error_block
+        def initialize(options = {})
+          self.instance_class = options[:instance_class]
+        end
+        def instantiate
+          self.instance_class.new(options)
+        end
+        def options
+          { write_error_block: self.write_error_block }
+        end
+        def on_write_error(&block)
+          self.write_error_block = block
+        end
       end
     end
 

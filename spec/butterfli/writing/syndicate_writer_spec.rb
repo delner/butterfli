@@ -9,19 +9,23 @@ describe Butterfli::SyndicateWriter do
   after(:each) { Butterfli.unsubscribe_all }
 
   context "#write" do
-    subject { writer.write(stories) }
-    context "invoked with a story" do
-      let(:stories) { [Butterfli::Story.new] }
-      it do
-        expect(target).to receive(:share).with(stories).exactly(1).times
-        subject
+    subject { writer.write(channel, stories) }
+    context "invoked on the 'stories' channel" do
+      let(:channel) { :stories }
+      context "invoked with a story" do
+        let(:stories) { [Butterfli::Story.new] }
+        it do
+          expect(target).to receive(:share).with(stories).exactly(1).times
+          subject
+        end
       end
-    end
-    context "invoked with a non-story object" do
-      let(:stories) { "I'm just a string." }
-      it do
-        expect(target).to_not receive(:share)
-        subject
+      context "invoked with a non-story object" do
+        let(:stories) { "I'm just a string." }
+        it do
+          # We don't expect the syndicate writer to filter non-stories
+          expect(target).to receive(:share).with([stories]).exactly(1).times
+          subject
+        end
       end
     end
   end

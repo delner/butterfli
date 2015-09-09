@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Butterfli::StoryJob do
+  let(:writer) { double('writer') }
+  before(:each) { Butterfli.writers << writer }
+  after(:each) { Butterfli.writers = nil }
+
   context "base class is instantiated" do
     let(:job) { Butterfli::StoryJob.new }
     context "and #work is invoked" do
@@ -39,6 +43,7 @@ describe Butterfli::StoryJob do
           context "which returns a Story" do
             let(:get_stories_block) { Proc.new { Butterfli::Story.new } }
             it do
+              expect(writer).to receive(:write_with_error_handling).with(:stories, instance_of(Array)).exactly(1).times
               expect(subject).to have(1).items
             end
           end
@@ -49,6 +54,7 @@ describe Butterfli::StoryJob do
           context "which returns an Array containing Story objects" do
             let(:get_stories_block) { Proc.new { [Butterfli::Story.new, Butterfli::Story.new] } }
             it do
+              expect(writer).to receive(:write_with_error_handling).with(:stories, instance_of(Array)).exactly(1).times
               expect(subject).to have(2).items
             end
           end
