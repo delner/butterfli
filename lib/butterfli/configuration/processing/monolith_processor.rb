@@ -2,7 +2,7 @@ module Butterfli::Configuration::Processing
   class MonolithProcessor < Butterfli::Configuration::Processing::Processor
     attr_accessor :after_work, :sleep_for, :num_workers
     def instance_class
-      Butterfli::Processing::MonolithProcessor
+      Butterfli::Processing::MonolithProcessorAdapter
     end
     def options
       super.merge({

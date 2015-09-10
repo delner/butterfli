@@ -18,10 +18,11 @@ describe Butterfli::Configuration::Processing::MonolithProcessor do
     after { Butterfli.processor = nil }
     subject { Butterfli.processor }
     it do
-      expect(subject).to be_a_kind_of(Butterfli::Processing::MonolithProcessor)
-      expect(subject.workers.first.after_work).to eq(after_work)
-      expect(subject.workers.first.sleep_interval).to eq(sleep_for)
-      expect(subject.workers.length).to eq(num_workers)
+      expect(subject).to be_a_kind_of(Butterfli::Processing::Processor)
+      expect(subject.adapter).to be_a_kind_of(Butterfli::Processing::MonolithProcessorAdapter)
+      expect(subject.adapter.workers.first.after_work).to eq(after_work)
+      expect(subject.adapter.workers.first.sleep_interval).to eq(sleep_for)
+      expect(subject.adapter.workers.length).to eq(num_workers)
     end
   end
 end

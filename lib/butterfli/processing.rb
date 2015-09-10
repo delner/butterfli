@@ -3,7 +3,7 @@ require 'butterfli/processing/worker'
 require 'butterfli/processing/work_pool'
 require 'butterfli/processing/processor'
 
-require 'butterfli/processing/monolith_processor'
+require 'butterfli/processing/monolith_processor_adapter'
 
 module Butterfli::Processing
   def self.included(base)
