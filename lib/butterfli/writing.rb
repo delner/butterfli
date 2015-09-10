@@ -1,3 +1,7 @@
+require 'butterfli/writing/writer'
+
+require 'butterfli/writing/syndicate_writer'
+
 module Butterfli::Writing
   def self.included(base)
     base.extend(ClassMethods)

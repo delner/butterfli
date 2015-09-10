@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Butterfli::Writer do
+describe Butterfli::Writing::Writer do
   let(:writer_class) do
-    stub_const 'TestWriter', Class.new(Butterfli::Writer)
+    stub_const 'TestWriter', Class.new(Butterfli::Writing::Writer)
     TestWriter
   end
   let(:options) { {} }
@@ -31,7 +31,7 @@ describe Butterfli::Writer do
   end
   context "#write_with_error_handling" do
     subject { writer.write_with_error_handling(channel, stories) }
-    let(:stories) { [Butterfli::Story.new] }
+    let(:stories) { [Butterfli::Data::Story.new] }
     let(:target) { double('target') }
 
     context "against a known channel" do

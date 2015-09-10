@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Butterfli::Cache do
-  let(:adapter) { Butterfli::MemoryCacheAdapter.new }
+describe Butterfli::Caching::Cache do
+  let(:adapter) { Butterfli::Caching::MemoryCacheAdapter.new }
   let(:memory_cache) { adapter.memory_cache }
 
   context "when initialized" do

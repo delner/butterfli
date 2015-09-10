@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Butterfli::Workable do
+describe Butterfli::Processing::Workable do
   let(:workable_class) do
     stub_const 'ItemProcessor', Class.new
-    ItemProcessor.class_eval { include Butterfli::Workable }
+    ItemProcessor.class_eval { include Butterfli::Processing::Workable }
     ItemProcessor
   end
   subject { workable_class }

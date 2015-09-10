@@ -1,14 +1,10 @@
 module Butterfli
   module Configuration
-    class Provider
-    end
-
-    # Adds methods for configuring providers to the Butterfli configuration
     module Provisioning
       def provider(name, &block)
         @providers ||= {}
 
-        new_provider = Butterfli::Configuration::Providers.instantiate_provider(name)
+        new_provider = Butterfli::Configuration::Provisioning::Providers.instantiate_provider(name)
         block.call(new_provider)
         @providers[name.to_sym] = new_provider
       end
@@ -22,23 +18,8 @@ module Butterfli
         end
       end
     end
-
-    # Maintains a list of known providers which Butterfli can configure
-    module Providers
-      def self.known_providers
-        @known_providers ||= {}
-      end
-      def self.register_provider(name, klass)
-        self.known_providers[name.to_sym] = klass
-      end
-      def self.instantiate_provider(name)
-        provider = self.known_providers[name.to_sym]
-        if provider
-          provider.new
-        else
-          raise "Unknown provider: #{name}!"
-        end
-      end
-    end
   end
 end
+
+require 'butterfli/configuration/provisioning/provider'
+require 'butterfli/configuration/provisioning/providers'

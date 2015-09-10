@@ -1,18 +1,9 @@
 module Butterfli
   module Configuration
-    class Cache
-      def instantiate
-        Butterfli::Cache.new(self.instance_class.new(options))
-      end
-      def options
-        { }
-      end
-    end
-
-    module Writing
+    module Caching
       def cache(name = nil, &block)
         if !name.nil?
-          new_cache = Butterfli::Configuration::Caches.instantiate_cache(name)
+          new_cache = Butterfli::Configuration::Caching::Caches.instantiate_cache(name)
           block.call(new_cache) if !block.nil?
           @cache = new_cache
         else
@@ -20,23 +11,10 @@ module Butterfli
         end
       end
     end
-
-    # Maintains a list of known caches which Butterfli can configure
-    module Caches
-      def self.known_caches
-        @known_caches ||= {}
-      end
-      def self.register_cache(name, klass)
-        self.known_caches[name.to_sym] = klass
-      end
-      def self.instantiate_cache(name, options = {})
-        cache = self.known_caches[name.to_sym]
-        if cache
-          cache.new
-        else
-          raise "Unknown cache: #{name}!"
-        end
-      end
-    end
   end
 end
+
+require 'butterfli/configuration/caching/cache'
+require 'butterfli/configuration/caching/caches'
+
+require 'butterfli/configuration/caching/memory_cache'

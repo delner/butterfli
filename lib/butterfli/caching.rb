@@ -1,3 +1,7 @@
+require 'butterfli/caching/cache'
+
+require 'butterfli/caching/memory_cache_adapter'
+
 module Butterfli::Caching
   def self.included(base)
     base.extend(ClassMethods)
@@ -13,7 +17,7 @@ module Butterfli::Caching
 
     private
     def default_cache
-      (Butterfli.configuration.cache && Butterfli.configuration.cache.instantiate) || Butterfli::Configuration::MemoryCache.new.instantiate
+      (Butterfli.configuration.cache && Butterfli.configuration.cache.instantiate) || Butterfli::Configuration::Caching::MemoryCache.new.instantiate
     end
   end
 end

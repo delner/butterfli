@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Butterfli::MonolithProcessor do
+describe Butterfli::Processing::MonolithProcessor do
   let(:processor_options) { { num_workers: 1, after_work: :block } }
-  let(:processor) { Butterfli::MonolithProcessor.new(processor_options) }
+  let(:processor) { Butterfli::Processing::MonolithProcessor.new(processor_options) }
 
-  it { expect(Butterfli::MonolithProcessor < Butterfli::Workable).to be true }
-  it { expect(Butterfli::MonolithProcessor < Butterfli::WorkPool).to be true }
+  it { expect(Butterfli::Processing::MonolithProcessor < Butterfli::Processing::Workable).to be true }
+  it { expect(Butterfli::Processing::MonolithProcessor < Butterfli::Processing::WorkPool).to be true }
 
   context "when initialized" do
     subject { processor }
@@ -21,7 +21,7 @@ describe Butterfli::MonolithProcessor do
       it { expect(subject).to be_empty }
     end
     context "after a job has been added" do
-      before(:each) { processor.enqueue(Butterfli::Job.new) }
+      before(:each) { processor.enqueue(Butterfli::Jobs::Job.new) }
       it { expect(subject).to have(1).items }
     end
   end
@@ -30,7 +30,7 @@ describe Butterfli::MonolithProcessor do
     it { expect(subject).to_not be_nil }
   end
   describe "#enqueue" do
-    let(:job) { Butterfli::Job.new }
+    let(:job) { Butterfli::Jobs::Job.new }
     subject { processor.enqueue(job) }
     context "when there are no jobs in the queue" do
       it do
@@ -40,7 +40,7 @@ describe Butterfli::MonolithProcessor do
     end
     context "when there is a job" do
       context "that is identical" do
-        let(:identical_job) { Butterfli::Job.new }
+        let(:identical_job) { Butterfli::Jobs::Job.new }
         before(:each) { processor.enqueue(identical_job) }
         it do
           expect(subject).to be false
@@ -49,7 +49,7 @@ describe Butterfli::MonolithProcessor do
         end
       end
       context "that is different" do
-        let(:different_job) { Butterfli::Job.new(arg: 1) }
+        let(:different_job) { Butterfli::Jobs::Job.new(arg: 1) }
         before(:each) { processor.enqueue(different_job) }
         it do
           expect(subject).to be true
@@ -66,7 +66,7 @@ describe Butterfli::MonolithProcessor do
       it { expect(subject).to be_nil }
     end
     context "when there is a job in the queue" do
-      let(:job) { Butterfli::Job.new }
+      let(:job) { Butterfli::Jobs::Job.new }
       before(:each) { processor.enqueue(job) }
       it { expect(subject).to eq(job) }
     end
@@ -77,7 +77,7 @@ describe Butterfli::MonolithProcessor do
       it { expect(subject).to be false }
     end
     context "when there is a job in the queue" do
-      let(:job) { Butterfli::Job.new }
+      let(:job) { Butterfli::Jobs::Job.new }
       before(:each) { processor.enqueue(job) }
       it { expect(subject).to be true }
     end

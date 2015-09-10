@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Butterfli::Cache do
+describe Butterfli::Caching::Cache do
   let(:adapter) { double('adapter') }
-  let(:cache) { Butterfli::Cache.new(adapter) }
+  let(:cache) { Butterfli::Caching::Cache.new(adapter) }
 
   context "when initialized" do
     it { expect(cache.adapter).to eq(adapter) }

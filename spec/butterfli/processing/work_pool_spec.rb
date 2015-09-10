@@ -8,10 +8,10 @@ RSpec.shared_examples "a multicasted work pool method" do |method|
   end
 end
 
-describe Butterfli::WorkPool do
+describe Butterfli::Processing::WorkPool do
   let(:work_pool_class) do
     stub_const 'ItemProcessor', Class.new
-    ItemProcessor.class_eval { include Butterfli::WorkPool }
+    ItemProcessor.class_eval { include Butterfli::Processing::WorkPool }
     ItemProcessor
   end
   subject { work_pool_class }

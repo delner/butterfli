@@ -1,3 +1,10 @@
+require 'butterfli/processing/workable'
+require 'butterfli/processing/worker'
+require 'butterfli/processing/work_pool'
+require 'butterfli/processing/processor'
+
+require 'butterfli/processing/monolith_processor'
+
 module Butterfli::Processing
   def self.included(base)
     base.extend(ClassMethods)

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Butterfli::Processor::Base do
+describe Butterfli::Processing::Processor do
   let(:options) { {} }
-  let(:processor) { Butterfli::Processor::Base.new(options) }
+  let(:processor) { Butterfli::Processing::Processor.new(options) }
 
   context "when initialized" do
   end

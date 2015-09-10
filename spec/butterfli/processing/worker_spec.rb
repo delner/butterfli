@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Butterfli::Worker do
+describe Butterfli::Processing::Worker do
   let(:workable_class) do
     stub_const 'ItemProcessor', Class.new
-    ItemProcessor.class_eval { include Butterfli::Workable }
+    ItemProcessor.class_eval { include Butterfli::Processing::Workable }
     ItemProcessor
   end
   let(:target) { double('target') }
@@ -19,10 +19,10 @@ describe Butterfli::Worker do
   end
 
   let(:worker_options) { {} }
-  let(:worker) { Butterfli::Worker.new(work_item, worker_options) }
+  let(:worker) { Butterfli::Processing::Worker.new(work_item, worker_options) }
   context "when initialized" do
     context "with no arguments" do
-      subject { Butterfli::Worker.new }
+      subject { Butterfli::Processing::Worker.new }
       it do
         expect(subject.after_work).to eq(:block)
         expect(subject.sleep_interval).to eq(1)
@@ -30,16 +30,16 @@ describe Butterfli::Worker do
     end
     context "with 'after_work'" do
       let(:value) { :continuous }
-      subject { Butterfli::Worker.new(after_work: value) }
+      subject { Butterfli::Processing::Worker.new(after_work: value) }
       it { expect(subject.after_work).to eq(value) }
     end
     context "with 'sleep_for'" do
       let(:value) { 5 }
-      subject { Butterfli::Worker.new(sleep_for: value) }
+      subject { Butterfli::Processing::Worker.new(sleep_for: value) }
       it { expect(subject.sleep_interval).to eq(value) }
     end
     context "with a work item" do
-      subject { Butterfli::Worker.new(work_item) }
+      subject { Butterfli::Processing::Worker.new(work_item) }
       it do
         expect(subject.work_started_block).to eq(work_started_block)
         expect(subject.work_completed_block).to eq(work_completed_block)
@@ -50,7 +50,7 @@ describe Butterfli::Worker do
         let(:other_completed_block) { Proc.new { target.other_completed } }
         let(:other_error_block) { Proc.new { target.other_error } }
         subject do
-          Butterfli::Worker.new(work_item,
+          Butterfli::Processing::Worker.new(work_item,
                                 on_work_started: other_started_block,
                                 on_work_completed: other_completed_block,
                                 on_work_error: other_error_block)
@@ -67,7 +67,7 @@ describe Butterfli::Worker do
     end
     context "with work callbacks" do
       subject do
-        Butterfli::Worker.new(on_work_started: work_started_block,
+        Butterfli::Processing::Worker.new(on_work_started: work_started_block,
                               on_work_completed: work_completed_block,
                               on_work_error: work_error_block)
       end

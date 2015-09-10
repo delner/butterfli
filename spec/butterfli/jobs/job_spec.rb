@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-describe Butterfli::Job do
-  before(:each) { Butterfli::Job.reset_all_callbacks! }
-  after(:each) { Butterfli::Job.reset_all_callbacks! }
+describe Butterfli::Jobs::Job do
+  before(:each) { Butterfli::Jobs::Job.reset_all_callbacks! }
+  after(:each) { Butterfli::Jobs::Job.reset_all_callbacks! }
 
   context "#before_work" do
     let(:callback) { Proc.new { } }
     context "on the class" do
-      subject { Butterfli::Job.before_work &callback }
+      subject { Butterfli::Jobs::Job.before_work &callback }
       it do
         subject
-        expect(Butterfli::Job.before_work_callbacks).to include(callback)
-        expect(Butterfli::Job.new.before_work_callbacks).to include(callback)
+        expect(Butterfli::Jobs::Job.before_work_callbacks).to include(callback)
+        expect(Butterfli::Jobs::Job.new.before_work_callbacks).to include(callback)
       end
     end
     context "on an instance" do
-      let(:job) { Butterfli::Job.new }
+      let(:job) { Butterfli::Jobs::Job.new }
       subject { job.after_work &callback }
       it do
         subject; expect(job.after_work_callbacks).to include(callback)
@@ -25,15 +25,15 @@ describe Butterfli::Job do
   context "#after_work" do
     let(:callback) { Proc.new { } }
     context "on the class" do
-      subject { Butterfli::Job.after_work &callback }
+      subject { Butterfli::Jobs::Job.after_work &callback }
       it do
         subject
-        expect(Butterfli::Job.after_work_callbacks).to include(callback)
-        expect(Butterfli::Job.new.after_work_callbacks).to include(callback)
+        expect(Butterfli::Jobs::Job.after_work_callbacks).to include(callback)
+        expect(Butterfli::Jobs::Job.new.after_work_callbacks).to include(callback)
       end
     end
     context "on an instance" do
-      let(:job) { Butterfli::Job.new }
+      let(:job) { Butterfli::Jobs::Job.new }
       subject { job.after_work &callback }
       it do
         subject; expect(job.after_work_callbacks).to include(callback)
@@ -42,7 +42,7 @@ describe Butterfli::Job do
   end
 
   context "base class is instantiated" do
-    let(:job) { Butterfli::Job.new }
+    let(:job) { Butterfli::Jobs::Job.new }
     context "and #work is invoked" do
       subject { job.work }
       it { expect { subject }.to raise_error(NoMethodError) }
@@ -51,7 +51,7 @@ describe Butterfli::Job do
   # TODO: These aren't really unit tests... should break them up
   context "inheriting class" do
     let(:job_class) do
-      stub_const 'TestJob', Class.new(Butterfli::StoryJob)
+      stub_const 'TestJob', Class.new(Butterfli::Jobs::Job)
       # NOTE: We add this #set_write_block because class definitions cannot access Rspec variables (out of scope)
       TestJob.send :define_method, :set_do_work_block do |&block| instance_variable_set(:@do_work_block, block) end
       TestJob.send :define_method, :do_work do instance_variable_get(:@do_work_block).call end
@@ -88,7 +88,7 @@ describe Butterfli::Job do
 
   context "#work" do
     let(:job_class) do
-      stub_const 'TestJob', Class.new(Butterfli::StoryJob)
+      stub_const 'TestJob', Class.new(Butterfli::Jobs::Job)
       # NOTE: We add this #set_write_block because class definitions cannot access Rspec variables (out of scope)
       TestJob.send :define_method, :set_do_work_block do |&block| instance_variable_set(:@do_work_block, block) end
       TestJob.send :define_method, :do_work do instance_variable_get(:@do_work_block).call end
@@ -103,8 +103,8 @@ describe Butterfli::Job do
       let(:before_callback) { Proc.new { |j| target.before(j) } }
       let(:after_callback) { Proc.new { |j, output| target.after(j, output) } }
       before(:each) do
-        Butterfli::Job.before_work &before_callback
-        Butterfli::Job.after_work &after_callback
+        Butterfli::Jobs::Job.before_work &before_callback
+        Butterfli::Jobs::Job.after_work &after_callback
         job.set_do_work_block do work_output end
       end
       it do
@@ -117,7 +117,7 @@ describe Butterfli::Job do
 
   context "when instantiated" do
     let(:args) { {} }
-    subject { Butterfli::Job.new(args) }
+    subject { Butterfli::Jobs::Job.new(args) }
     context "with no arguments" do
       it { expect(subject.args).to be_empty }
     end
@@ -128,11 +128,11 @@ describe Butterfli::Job do
   end
   context "given two instances" do
     let(:job_class_one) do
-      stub_const 'JobOne', Class.new(Butterfli::Job)
+      stub_const 'JobOne', Class.new(Butterfli::Jobs::Job)
       JobOne
     end
     let(:job_class_two) do
-      stub_const 'JobTwo', Class.new(Butterfli::Job)
+      stub_const 'JobTwo', Class.new(Butterfli::Jobs::Job)
       JobTwo
     end
     context "of the same class" do
