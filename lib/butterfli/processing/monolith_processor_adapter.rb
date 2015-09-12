@@ -1,13 +1,21 @@
 module Butterfli::Processing
   class MonolithProcessorAdapter < Butterfli::Processing::Processor
     include Butterfli::Processing::Workable
+    include Butterfli::Processing::Subworkable
     include Butterfli::Processing::WorkPool
+
+    attr_accessor :options
 
     def initialize(options = {})
       super
-      self.setup_work_events
+      self.options = options
+      self.setup_work_event
+      self.setup_callbacks
       options[:num_workers].times do
-        self.workers << Butterfli::Processing::Worker.new(self, after_work: options[:after_work], sleep_for: options[:sleep_for])
+        self.workers << Butterfli::Processing::Worker.new(self,
+                                                          after_work: options[:after_work],
+                                                          sleep_for: options[:sleep_for],
+                                                          on_worker_death: options[:on_worker_death])
       end
       self
     end
@@ -22,7 +30,7 @@ module Butterfli::Processing
       self.mutex.synchronize do
         queued = !self.queue.add?(job).nil?
       end
-      self.wakeup if queued
+      self.wakeup if queued && options[:after_work] == :block
       return queued
     end
     def dequeue(queue=nil)
@@ -39,29 +47,31 @@ module Butterfli::Processing
         !self.queue.empty?
       end
     end
-    def setup_work_events
-      self.on_work_started do
+    def setup_work_event
+      self.on_work do
         completed_jobs = []
         errors = []
         while self.pending_jobs?
           job = self.dequeue
           begin
-            completed_jobs << job.work if !job.nil?
+            if !job.nil?
+              self.job_started_block.call(job) if self.job_started_block
+              job_result = job.work
+              completed_jobs << {job: job, result: job_result}
+              self.job_completed_block.call(job, result)  if self.job_completed_block
+            end
           rescue => error
-            # TODO: We should do a better job of raising these errors to log-level
-            # puts "Job failed! Error: #{error.message} Backtrace: #{error.backtrace}"
+            self.job_error_block.call(job, error) if self.job_error_block
             errors << error
           end
         end
         completed_jobs
       end
-      self.on_work_completed do |worker, completed_jobs|
-        # TODO: We should do a better job of raising these events to log-level
-        #puts "Completed #{completed_jobs.length} jobs." if completed_jobs && !completed_jobs.empty?
-      end
-      self.on_work_error do |worker, error|
-        # TODO: We should do a better job of raising these errors to log-level
-        # puts "Failed to process jobs! Error: #{error.message} #{error.backtrace}"
+    end
+    def setup_callbacks
+      [ :on_job_started, :on_job_completed, :on_job_error,
+        :on_work_started, :on_work_completed, :on_work_error].each do |event|
+        self.send(event, &(self.options[event])) if self.options[event]
       end
     end
   end

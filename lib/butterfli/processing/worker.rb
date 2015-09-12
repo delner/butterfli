@@ -1,7 +1,7 @@
 module Butterfli::Processing
   class Worker
     attr_accessor :thread, :signaled_to_run, :blocking, :after_work, :sleep_interval, :obituary
-    attr_accessor :work_started_block, :work_completed_block, :work_error_block
+    attr_accessor :work_started_block, :work_block, :work_completed_block, :work_error_block, :worker_death_block
 
     def initialize(work_item = nil, options = {})
       if work_item.is_a?(Hash)
@@ -11,14 +11,17 @@ module Butterfli::Processing
       self.after_work = options[:after_work] || :block
       self.sleep_interval = options[:sleep_for] || 1
       if work_item
+        self.work_block = work_item.work_block
         self.work_started_block = work_item.work_started_block
         self.work_completed_block = work_item.work_completed_block
         self.work_error_block = work_item.work_error_block
       else
+        self.work_block = options[:on_work]
         self.work_started_block = options[:on_work_started]
         self.work_completed_block = options[:on_work_completed]
         self.work_error_block = options[:on_work_error]
       end
+      self.worker_death_block = options[:on_worker_death]
       self
     end
     def alive?
@@ -43,7 +46,9 @@ module Butterfli::Processing
         begin
           self.process; Thread.exit
         rescue Exception => e
-          self.obituary = e; raise
+          self.obituary = e
+          self.worker_death_block.call(self.obituary) if self.worker_death_block
+          raise
         end
       end
       return true
@@ -77,10 +82,11 @@ module Butterfli::Processing
     def process
       while self.should_run? do
         begin
-          result = self.work_started_block.call(self)
-          self.work_completed_block.call(self, result) if self.work_completed_block
+          self.work_started_block.call if self.work_started_block
+          result = self.work_block.call
+          self.work_completed_block.call(result) if self.work_completed_block
         rescue => e
-          self.work_error_block.call(self, e) if self.work_error_block
+          self.work_error_block.call(e) if self.work_error_block
         end
         if self.should_run?
           if self.after_work == :block

@@ -1,4 +1,5 @@
 require 'butterfli/processing/workable'
+require 'butterfli/processing/subworkable'
 require 'butterfli/processing/worker'
 require 'butterfli/processing/work_pool'
 require 'butterfli/processing/processor'

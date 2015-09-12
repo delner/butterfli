@@ -4,6 +4,9 @@ module Butterfli::Processing
     def work_started_block
       @work_started_block
     end
+    def work_block
+      @work_block
+    end
     def work_completed_block
       @work_completed_block
     end
@@ -14,6 +17,9 @@ module Butterfli::Processing
     # Setters
     def on_work_started(&block)
       @work_started_block = block
+    end
+    def on_work(&block)
+      @work_block = block
     end
     def on_work_completed(&block)
       @work_completed_block = block
