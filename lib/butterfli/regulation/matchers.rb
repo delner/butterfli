@@ -1,0 +1,1 @@
+require 'butterfli/regulation/matchers/type'
