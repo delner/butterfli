@@ -283,7 +283,7 @@ describe Butterfli::Processing::Worker do
     context "for the second time" do
       context "after the worker has been stopped" do
         let(:work_block) { Proc.new { sleep(0.01) } }
-        before(:each) { worker.start; sleep(0.01); worker.stop; sleep(0.01) }
+        before(:each) { worker.start; sleep(0.01); worker.stop; sleep(0.02) }
         it do
           expect(subject).to be true
           expect(worker.alive?).to be true
