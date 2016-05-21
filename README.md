@@ -1,7 +1,7 @@
 ![Butterfli](http://cdn.delner.com/www/images/projects/butterfli/logo_small.svg)
 ==========
 
-[![Build Status](https://travis-ci.org/delner/butterfli.svg?branch=master)](https://travis-ci.org/delner/butterfli) ![Gem Version](https://badge.fury.io/rb/butterfli.svg)
+[![Build Status](https://travis-ci.org/delner/butterfli.svg?branch=master)](https://travis-ci.org/delner/butterfli) ![Gem Version](https://img.shields.io/gem/v/butterfli.svg?maxAge=2592000)
 ###### *For Ruby 1.9.3, 2.0.0, 2.1.0*
 
 ### Introduction
